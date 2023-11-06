@@ -26,6 +26,7 @@ const AuthForm = () => {
     }, [session?.status, router])
     const { register,
         handleSubmit,
+        setValue,
         formState: {
             errors
         } } = useForm<FieldValues>({
@@ -41,6 +42,9 @@ const AuthForm = () => {
         if (variant === 'REGISTER') {
             axios.post('/api/register', data)
                 .then((res) => {
+                    setValue('name', '', { shouldValidate: true })
+                    setValue('password', '', { shouldValidate: true })
+                    setValue('email', '', { shouldValidate: true })
                     toast.success('User Created Successfully')
                     signIn("credentials", data)
                 })
@@ -56,6 +60,8 @@ const AuthForm = () => {
                     toast.error('Invalid Credentials')
                 }
                 if (callback?.ok) {
+                    setValue('email', '', { shouldValidate: true })
+                    setValue('password', '', { shouldValidate: true })
                     toast.success('Logged In')
                     router.push("/users")
                 }
